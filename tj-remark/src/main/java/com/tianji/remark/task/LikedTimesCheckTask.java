@@ -21,6 +21,5 @@ public class LikedTimesCheckTask {
         for (String bizType : BIZ_TYPES) {
             recordService.readLikedTimesAndSendMessage(bizType, MAX_BIZ_SIZE);
         }
-
     }
 }

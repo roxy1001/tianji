@@ -6,6 +6,8 @@ import com.tianji.api.dto.course.CourseFullInfoDTO;
 import com.tianji.api.dto.leanring.LearningLessonDTO;
 import com.tianji.api.dto.leanring.LearningRecordDTO;
 import com.tianji.api.dto.leanring.LearningRecordFormDTO;
+import com.tianji.common.autoconfigure.mq.RabbitMqHelper;
+import com.tianji.common.constants.MqConstants;
 import com.tianji.common.exceptions.BizIllegalException;
 import com.tianji.common.exceptions.DbException;
 import com.tianji.common.utils.BeanUtils;
@@ -42,6 +44,8 @@ public class LearningRecordServiceImpl extends ServiceImpl<LearningRecordMapper,
     private final CourseClient courseClient;
 
     private final LearningRecordDelayTaskHandler taskHandler;
+
+    private final RabbitMqHelper rabbitMqHelper;
 
     @Override
     public LearningLessonDTO queryLearningRecordByCourse(Long courseId) {
@@ -153,6 +157,10 @@ public class LearningRecordServiceImpl extends ServiceImpl<LearningRecordMapper,
         }
         //4.3清理缓存
         taskHandler.cleanRecordCache(recordDTO.getLessonId(), recordDTO.getSectionId());
+        /*下发学习一个视频的消息，用来统计积分*/
+        rabbitMqHelper.send(MqConstants.Exchange.LEARNING_EXCHANGE,
+                MqConstants.Key.LEARN_SECTION,
+                userId);
         return true;
     }
 
@@ -184,6 +192,10 @@ public class LearningRecordServiceImpl extends ServiceImpl<LearningRecordMapper,
         if (!success){
             throw new DbException("新增考试记录失败!");
         }
+        /*下发学习一个视频的消息，用来统计积分*/
+        rabbitMqHelper.send(MqConstants.Exchange.LEARNING_EXCHANGE,
+                MqConstants.Key.LEARN_SECTION,
+                userId);
         return true;
     }
 }

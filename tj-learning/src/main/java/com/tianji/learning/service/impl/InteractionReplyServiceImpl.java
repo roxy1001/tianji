@@ -83,7 +83,7 @@ public class InteractionReplyServiceImpl extends ServiceImpl<InteractionReplyMap
             mqHelper.send(
                     MqConstants.Exchange.LEARNING_EXCHANGE,
                     MqConstants.Key.WRITE_REPLY,
-                    5);
+                    userId);
         }
     }
 
