@@ -75,7 +75,7 @@ public interface MqConstants {
 
         String ORDER_DELAY_KEY = "delay.order.query";
 
-        /*领取优惠劵的key*/
+        /*领取优惠券的key*/
         String COUPON_RECEIVE = "coupon.receive";
     }
 }

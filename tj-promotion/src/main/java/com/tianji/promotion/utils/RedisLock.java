@@ -10,16 +10,14 @@ import java.util.concurrent.TimeUnit;
 public class RedisLock {
 
     private final String key;
-
     private final StringRedisTemplate redisTemplate;
 
-    public boolean tryLock(Long leaseTime, TimeUnit unit){
-        //1.获取线程的名称
+    public boolean tryLock(long leaseTime, TimeUnit unit){
+        // 1.获取线程名称
         String value = Thread.currentThread().getName();
-        //2.获取锁
+        // 2.获取锁
         Boolean success = redisTemplate.opsForValue().setIfAbsent(key, value, leaseTime, unit);
-        //3.返回结果
-        /*return  success !=null?success:false;*/
+        // 3.返回结果
         return BooleanUtils.isTrue(success);
     }
 

@@ -24,7 +24,7 @@ public class LearningPointsListener {
             key = MqConstants.Key.WRITE_REPLY
     ))
     public void listenWriteReplyMessage(Long userId){
-        recordService.addPointsRecord(userId , 5 , PointsRecordType.QA);
+        recordService.addPointsRecord(userId, 5, PointsRecordType.QA);
     }
 
     @RabbitListener(bindings = @QueueBinding(
@@ -33,7 +33,7 @@ public class LearningPointsListener {
             key = MqConstants.Key.SIGN_IN
     ))
     public void listenSignInMessage(SignInMessage message){
-        recordService.addPointsRecord(message.getUserId() , message.getPoints() , PointsRecordType.SIGN);
+        recordService.addPointsRecord(message.getUserId(), message.getPoints(), PointsRecordType.SIGN);
     }
 
     @RabbitListener(bindings = @QueueBinding(

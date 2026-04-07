@@ -1,23 +1,22 @@
 package com.tianji.promotion.domain.po;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
-
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.tianji.promotion.enums.ExchangeCodeStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
  * 兑换码
  * </p>
  *
- * @author author
- * @since 2026-02-05
+ * @author 虎哥
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

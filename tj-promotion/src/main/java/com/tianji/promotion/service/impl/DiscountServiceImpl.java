@@ -35,30 +35,34 @@ public class DiscountServiceImpl implements IDiscountService {
     private final ICouponScopeService scopeService;
 
     private final Executor discountSolutionExecutor;
+
     @Override
     public List<CouponDiscountDTO> findDiscountSolution(List<OrderCourseDTO> orderCourses) {
-        //1.查询我的所有可用的优惠劵
+        // 1.查询我的所有可用优惠券
         List<Coupon> coupons = userCouponMapper.queryMyCoupons(UserContext.getUser());
-        if (CollUtils.isEmpty(coupons)){
+        if (CollUtils.isEmpty(coupons)) {
             return CollUtils.emptyList();
         }
-        //2.初筛
-        //2.1.计算订单总价
+        // 2.初筛
+        // 2.1.计算订单总价
         int totalAmount = orderCourses.stream().mapToInt(OrderCourseDTO::getPrice).sum();
-        //2.2.筛选可用券
+        // 2.2.筛选可用券
         List<Coupon> availableCoupons = coupons.stream()
                 .filter(c -> DiscountStrategy.getDiscount(c.getDiscountType()).canUse(totalAmount, c))
                 .collect(Collectors.toList());
-        //3.排列组合出所有方案
-        //3.1.细筛(找出每一个优惠券的可用的课程,判断课程总价是否达到优惠券的使用要求)
-        Map<Coupon,List<OrderCourseDTO>> availableCouponMap = findAvailableCoupon(availableCoupons, orderCourses);
-        if (CollUtils.isEmpty(availableCouponMap)){
+        if (CollUtils.isEmpty(availableCoupons)) {
             return CollUtils.emptyList();
         }
-        //3.2.排序组合
+        // 3.排列组合出所有方案
+        // 3.1.细筛（找出每一个优惠券的可用的课程，判断课程总价是否达到优惠券的使用需求）
+        Map<Coupon, List<OrderCourseDTO>> availableCouponMap = findAvailableCoupon(availableCoupons, orderCourses);
+        if (CollUtils.isEmpty(availableCouponMap)) {
+            return CollUtils.emptyList();
+        }
+        // 3.2.排列组合
         availableCoupons = new ArrayList<>(availableCouponMap.keySet());
         List<List<Coupon>> solutions = PermuteUtil.permute(availableCoupons);
-        //3.3.添加单券的方案
+        // 3.3.添加单券的方案
         for (Coupon c : availableCoupons) {
             solutions.add(List.of(c));
         }
@@ -73,10 +77,10 @@ public class DiscountServiceImpl implements IDiscountService {
                             () -> calculateSolutionDiscount(availableCouponMap, orderCourses, solution),
                             discountSolutionExecutor
                     ).thenAccept(dto -> {
-                        // 4.3.提交任务结果
-                        list.add(dto);
-                        latch.countDown();
-                    });
+                // 4.3.提交任务结果
+                list.add(dto);
+                latch.countDown();
+            });
         }
         // 4.4.等待运算结束
         try {
@@ -198,27 +202,26 @@ public class DiscountServiceImpl implements IDiscountService {
             List<Coupon> coupons, List<OrderCourseDTO> courses) {
         Map<Coupon, List<OrderCourseDTO>> map = new HashMap<>(coupons.size());
         for (Coupon coupon : coupons) {
-            //1.找到优惠券可用的课程
+            // 1.找出优惠券的可用的课程
             List<OrderCourseDTO> availableCourses = courses;
-            if (coupon.getSpecific()){
-                //1.1.限定了范围,查询券的可用范围
-                List<CouponScope> scopes = scopeService.lambdaQuery()
-                        .eq(CouponScope::getCouponId, coupon.getId()).list();
-                //1.2.获取范围对应的分类id
+            if (coupon.getSpecific()) {
+                // 1.1.限定了范围，查询券的可用范围
+                List<CouponScope> scopes = scopeService.lambdaQuery().eq(CouponScope::getCouponId, coupon.getId()).list();
+                // 1.2.获取范围对应的分类id
                 Set<Long> scopeIds = scopes.stream().map(CouponScope::getBizId).collect(Collectors.toSet());
-                //1.3.筛选课程
-                availableCourses = courses.stream().filter(c -> scopeIds.contains(c.getCateId()))
-                        .collect(Collectors.toList());
+                // 1.3.筛选课程
+                availableCourses = courses.stream()
+                        .filter(c -> scopeIds.contains(c.getCateId())).collect(Collectors.toList());
             }
-            if (CollUtils.isEmpty(availableCourses)){
-                //没有任何可用课程,抛弃
+            if (CollUtils.isEmpty(availableCourses)) {
+                // 没有任何可用课程，抛弃
                 continue;
             }
-            //2.计算课程总价
+            // 2.计算课程总价
             int totalAmount = availableCourses.stream().mapToInt(OrderCourseDTO::getPrice).sum();
-            //3.判断是否可用
+            // 3.判断是否可用
             Discount discount = DiscountStrategy.getDiscount(coupon.getDiscountType());
-            if (discount.canUse(totalAmount, coupon)){
+            if (discount.canUse(totalAmount, coupon)) {
                 map.put(coupon, availableCourses);
             }
         }

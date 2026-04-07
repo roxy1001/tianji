@@ -1,6 +1,6 @@
 #! /bin/sh
 cd /usr/local/src/script || exit 1
-BASE_PATH='/usr/local/src/jenkins/workspace/tjxt-dev-build'
+BASE_PATH='/usr/local/src/tianji/tjxt'
 PROJECT_NAME=""
 PROJECT_PATH=''
 CONTAINER_NAME=""
@@ -57,17 +57,20 @@ if [ "$DEBUG_PORT" = "0" ]; then
   echo "run in normal mode"
   docker run -d --name ${CONTAINER_NAME} \
    -p "${PORT}:${PORT}" \
+   --restart=always \
    -e JAVA_OPTS="${JAVA_OPTS}" \
-   --memory 300m --memory-swap -1 \
-   --network heima-net ${IMAGE_NAME} \
+   -e SPRING_PROFILES_ACTIVE=test \
+   ${IMAGE_NAME} \
   || exit 1
 else
   echo "run in debug mode"
   docker run -d --name ${CONTAINER_NAME} \
    -p "${PORT}:${PORT}" \
+   --restart=always \
    -p ${DEBUG_PORT}:5005 \
    -e JAVA_OPTS="${JAVA_OPTS}" \
-   --network heima-net ${IMAGE_NAME} \
+   -e SPRING_PROFILES_ACTIVE=test \
+   ${IMAGE_NAME} \
   || exit 1
 fi
 echo "container is running now !! ^_^"

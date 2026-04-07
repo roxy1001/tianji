@@ -25,29 +25,16 @@ public class LikeTimesChangeListener {
 
     private final IInteractionReplyService replyService;
 
-/*    @RabbitListener(bindings = @QueueBinding(
-            value = @Queue(name = "qa.liked.times.queue", durable = "true"),
-            exchange = @Exchange(name = LIKE_RECORD_EXCHANGE, type = ExchangeTypes.TOPIC),
-            key = QA_LIKED_TIMES_KEY
-    ))
-    public void listenReplyLikeTimesChange(LikedTimesDTO likedTimesDTO){
-        log.debug("监听到问答或评论的点赞数变更的消息: {},点赞数:{}",
-                likedTimesDTO.getBizId(), likedTimesDTO.getLikedTimes());
-        InteractionReply r = new InteractionReply();
-        r.setId(likedTimesDTO.getBizId());
-        r.setLikedTimes(likedTimesDTO.getLikedTimes());
-        replyService.updateById(r);
-    }*/
-
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(name = "qa.liked.times.queue", durable = "true"),
             exchange = @Exchange(name = LIKE_RECORD_EXCHANGE, type = ExchangeTypes.TOPIC),
             key = QA_LIKED_TIMES_KEY
     ))
-    public void listenReplyLikeTimesChange(List<LikedTimesDTO> likedTimesDTO){
-        log.debug("监听到问答或评论的点赞数变更");
-        List<InteractionReply> list = new ArrayList<>(likedTimesDTO.size());
-        for (LikedTimesDTO dto : likedTimesDTO) {
+    public void listenReplyLikedTimesChange(List<LikedTimesDTO> likedTimesDTOs){
+        log.debug("监听到回答或评论的点赞数变更");
+
+        List<InteractionReply> list = new ArrayList<>(likedTimesDTOs.size());
+        for (LikedTimesDTO dto : likedTimesDTOs) {
             InteractionReply r = new InteractionReply();
             r.setId(dto.getBizId());
             r.setLikedTimes(dto.getLikedTimes());

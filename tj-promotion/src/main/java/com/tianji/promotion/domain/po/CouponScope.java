@@ -1,20 +1,20 @@
 package com.tianji.promotion.domain.po;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * <p>
  * 优惠券作用范围信息
  * </p>
  *
- * @author author
- * @since 2026-02-05
+ * @author 虎哥
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -30,7 +30,7 @@ public class CouponScope implements Serializable {
     /**
      * 范围限定类型：1-分类，2-课程，等等
      */
-    private Integer type = 1;
+    private Integer type;
 
     /**
      * 优惠券id

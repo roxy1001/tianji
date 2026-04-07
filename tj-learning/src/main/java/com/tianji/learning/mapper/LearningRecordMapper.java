@@ -13,8 +13,8 @@ import java.util.List;
  * 学习记录表 Mapper 接口
  * </p>
  *
- * @author author
- * @since 2026-01-29
+ * @author 虎哥
+ * @since 2022-12-10
  */
 public interface LearningRecordMapper extends BaseMapper<LearningRecord> {
 

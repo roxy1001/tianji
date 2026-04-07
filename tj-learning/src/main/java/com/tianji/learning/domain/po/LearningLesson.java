@@ -1,24 +1,24 @@
 package com.tianji.learning.domain.po;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
-
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.tianji.learning.enums.LessonStatus;
 import com.tianji.learning.enums.PlanStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
  * <p>
  * 学生课程表
  * </p>
  *
- * @author author
- * @since 2026-01-28
+ * @author 虎哥
+ * @since 2022-12-02
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -50,7 +50,7 @@ public class LearningLesson implements Serializable {
     private LessonStatus status;
 
     /**
-     * 每周学习频率，例如每周学习6小节，则频率为6
+     * 每周学习频率，每周3天，每天2节，则频率为6
      */
     private Integer weekFreq;
 

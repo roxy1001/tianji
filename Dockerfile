@@ -1,4 +1,4 @@
-FROM openjdk:11.0-jre-buster
+FROM registry.cn-beijing.aliyuncs.com/itcast/openjdk:17-jdk-eclipse-temurin
 LABEL maintainer="研究院研发组 <research-maint@itcast.cn>"
 ENV JAVA_OPTS=""
 # 设定时区

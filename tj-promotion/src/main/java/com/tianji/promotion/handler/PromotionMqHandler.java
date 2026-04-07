@@ -1,6 +1,5 @@
 package com.tianji.promotion.handler;
 
-import com.tianji.common.constants.MqConstants;
 import com.tianji.promotion.domain.dto.UserCouponDTO;
 import com.tianji.promotion.service.IUserCouponService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ public class PromotionMqHandler {
     private final IUserCouponService userCouponService;
 
     @RabbitListener(bindings = @QueueBinding(
-            value = @Queue(name = "coupon.receive.queue",durable = "true"),
+            value = @Queue(name = "coupon.receive.queue", durable = "true"),
             exchange = @Exchange(name = PROMOTION_EXCHANGE, type = ExchangeTypes.TOPIC),
             key = COUPON_RECEIVE
     ))

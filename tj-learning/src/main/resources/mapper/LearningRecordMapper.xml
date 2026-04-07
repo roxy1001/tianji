@@ -3,11 +3,11 @@
 <mapper namespace="com.tianji.learning.mapper.LearningRecordMapper">
 
     <select id="countLearnedSections" resultType="com.tianji.api.dto.IdAndNumDTO">
-            select lesson_id as id, count(1) as num
-            from learning_record
-            where user_id = #{userId}
-            and finished = 1
-            and finish_time &gt; #{begin} and finish_time &lt; #{end}
-            group by lesson_id;
+        SELECT lesson_id AS id, COUNT(1) AS num
+        FROM learning_record
+        WHERE user_id = #{userId}
+        AND finished = 1
+        AND finish_time &gt; #{begin} AND finish_time &lt; #{end}
+        GROUP BY lesson_id;
     </select>
 </mapper>
